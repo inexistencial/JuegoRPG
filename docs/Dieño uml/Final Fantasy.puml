@@ -1,0 +1,201 @@
+@startuml diagrama General
+
+FinalFantasy *-- EstadosJuego
+Juego *-- Nivel
+
+Nivel *-- Personaje
+
+EstadosJuego *-- Juego
+
+class Nivel{
+    -Mapa
+    -Objetivo
+    -Recompensa
+
+}
+
+Pintor *-- Juego
+
+Ventana --|> Nivel
+Ventana --|> Juego
+
+abstract Juego{
+    EstadoActual : EstadosJuego
+    Actualizar()
+    Dibujar()
+}
+
+Personaje --|> Dibujo
+Personaje --|> Item
+
+class Personaje #Red{
++Fuerza:Int
++Destreza:Int
++Inteligencia:Int
++Vitalidad:Int
++Mana:Int
++Resistencia:Int
++Dibujar()
+-Ubicacion()
+}
+Protagonista --|> Personaje
+Protagonista *-- Rol
+
+class Protagonista #GreenYellow{
++Roxana 
++Serena
++Skullduggery
++Fletcher
+
+}
+
+Enemigo --|> Personaje
+class Enemigo #GreenYellow{
+-Goblin 
+-Trasgo 
+-Slime 
+-Nomuerto
+-Dragon
+-Bruja
+-Lobo
+}
+
+Pocion --|> Consumible
+Flecha--|> Consumible
+Arrojadizo--|> Consumible
+
+class Consumible{
+-Agotable
+-Acumulable
+
+}
+Dibujo--|>Item
+Armadura --|>Item
+Arma --|>Item
+Accesorio --|>Item
+Consumible --|>Item
+
+class Item #MediumPurple{
+-Ubicacion
+-Icono
++Obtener()
+
+}
+
+Flecha o-- Efecto
+Arrojadizo o-- Efecto
+
+class Pocion {
+    -Curacion
+    -Resistencia 
+    -Ataque 
+    -Mana
+}
+
+class Rol #GreenYellow{
+-Mago
+-guerrero
+-tanque
+-ladron
+
+}
+
+Efecto --|> StatsEquipamiento
+
+class Efecto {
+-fuego
+-agua 
+-hielo
+-electrico
+}
+
+enum EstadosJuego #LightGreen{
+Iniciar
+EnJuego
+Derrota
+
+}
+
+Arma --|> TipoArma
+Arma --* Personaje
+class Arma #SkyBlue{
++seleccionable
+
+}
+
+class TipoArma  {
+-Espada
+-Daga 
+-Baston 
+-Escudo 
+-Lanza
+-Arco
+-Hacha
+}
+
+class TipoArmadura  {
+-casco
+-peto
+-pantalones
+-calzado
+}
+
+Armadura--|>TipoArmadura
+Armadura --*Personaje
+class Armadura #SkyBlue{
++seleccionable
+
+}
+
+class Accesorio #SkyBlue{
+    -collar
+    -anillo
+    -cinturon 
+}
+
+StatsEquipamiento --* Accesorio
+StatsEquipamiento --* Arma
+ StatsEquipamiento --* Armadura
+
+enum StatsEquipamiento #LightGreen{
+    # Ataque:Int
+    # Defensa:Int
+    # Resistencia:Int
+    #Efecto
+}
+Recompensa--*Item 
+Recompensa--|>Protagonista
+class Recompensa{
+    +EnemigoDerrotado
+    +Nivelcompletado
+    +Cofre
+
+}
+Dibujo "1" o-- "n" Pintor
+class Dibujo{
+    #posicion
+    #Icono
+    +Dibujar()
+    }
+Combate --|>Protagonista
+Combate --|>Enemigo
+Combate *-- Strategy
+
+class Combate{
+    -Client
+
+}
+class Context{
+    -Combat
+    +setStrategy ( Strategy )
+    +doSomthing()
+}
+interface Strategy {
++execute(data)
+
+
+}
+ConcreteStrategies --|>Strategy
+Context o-- Strategy
+
+@enduml

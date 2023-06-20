@@ -1,0 +1,247 @@
+@startuml diagrama General
+
+'!include Engine.puml
+'Otro comentario  
+
+'Paquetes---------------------------------------------------'
+package FinalFantasyGeneral{
+    class FinalFantasy
+
+    package Base{
+        abstract Juego
+        enum EstadosJuego
+        class Context
+        class Nivel
+    }
+
+    package Engine{
+    class Dibujo
+    class Pintor
+}
+    package Actores{
+        class Personaje
+        class Enemigo
+        class Protagonista
+        enum Rol
+    }
+    package Estrategia{
+        interface Strategy
+        class Combate
+        class Inventario
+        class Mapa
+    }
+    package Herramientas{
+        class Item
+        class Consumible
+        class Arma
+        class Armadura
+        class Accesorio
+        class TipoArma
+        class TipoArmadura
+        class Efecto
+        class Arrojadizo 
+        class Flecha
+        class Pocion
+        class Recompensa 
+        enum StatsEquipamiento
+    }
+
+}
+'Paquetes---------------------------------------------------'
+
+'Clases---------------------------------------------------'
+class Nivel{
+    -Mapa
+    -Objetivo
+    -Recompensa
+
+}
+
+abstract Juego{
+    EstadoActual : EstadosJuego
+    Actualizar()
+    Dibujar()
+}
+
+class Personaje #Red{
++Fuerza:Int
++Destreza:Int
++Inteligencia:Int
++Vitalidad:Int
++Mana:Int
++Resistencia:Int
++Dibujar()
+-Ubicacion()
+}
+
+class Protagonista #GreenYellow{
++Roxana 
++Serena
++Skullduggery
++Fletcher
+
+}
+
+class Enemigo #GreenYellow{
+-Goblin 
+-Trasgo 
+-Slime 
+-Nomuerto
+-Dragon
+-Bruja
+-Lobo
+}
+
+class Consumible{
+-Agotable
+-Acumulable
+
+}
+
+class Item #MediumPurple{
+-Ubicacion
+-Icono
++Obtener()
+
+}
+
+class Pocion {
+    -Curacion
+    -Resistencia 
+    -Ataque 
+    -Mana
+}
+
+enum Rol #GreenYellow{
+-Mago
+-guerrero
+-tanque
+-ladron
+
+}
+
+class Efecto {
+-fuego
+-agua 
+-hielo
+-electrico
+}
+
+enum EstadosJuego #LightGreen{
+Mapa
+Inventario
+Combate
+
+}
+
+class Arma #SkyBlue{
++seleccionable
++ cambio
+}
+
+class TipoArma  {
+-Espada
+-Daga 
+-Baston 
+-Escudo 
+-Lanza
+-Arco
+-Hacha
+}
+
+class TipoArmadura  {
+-casco
+-peto
+-pantalones
+-calzado
+}
+
+class Armadura #SkyBlue{
++seleccionable
++cambio
+}
+
+class Accesorio #SkyBlue{
+    -collar
+    -anillo
+    -cinturon 
+}
+
+enum StatsEquipamiento #LightGreen{
+    # Ataque:Int
+    # Defensa:Int
+    # Resistencia:Int
+    #Efecto
+}
+
+class Recompensa{
+    +EnemigoDerrotado
+    +Nivelcompletado
+    +Cofre
+
+}
+Dibujo "1" o-- "n" Pintor
+class Dibujo{
+    #posicion
+    #Icono
+    +Dibujar()
+    }
+
+class Combate{
+    -Client
+
+}
+class Context{
+    -Combat(boolean)
+    EstadosJuego: EstadoActual
+    +setStrategy ( Strategy )
+    +doSomthing()
+}
+'Clases-------------------------------------------------------------'
+
+'Interfaces---------------------------------------------------'
+interface Strategy {
++execute(data)
+}
+'Interfaces-------------------------------------------------------------'
+
+'Relaciones---------------------------------------------------'
+Combate --|>Protagonista
+Combate --|>Enemigo
+Recompensa--*Item 
+Recompensa--|>Protagonista
+StatsEquipamiento --* Accesorio
+StatsEquipamiento --* Arma
+StatsEquipamiento --* Armadura
+Armadura--|>TipoArmadura
+Armadura --*Personaje
+Arma --|> TipoArma
+Arma --* Personaje
+Efecto --|> StatsEquipamiento
+Flecha o-- Efecto
+Arrojadizo o-- Efecto
+Dibujo--|>Item
+Armadura --|>Item
+Arma --|>Item
+Accesorio --|>Item
+Consumible --|>Item
+Pocion --|> Consumible
+Flecha--|> Consumible
+Arrojadizo--|> Consumible
+Enemigo --|> Personaje
+Protagonista --|> Personaje
+Protagonista *-- Rol
+Pintor *-- Juego
+Personaje --|> Dibujo
+Personaje --|> Item
+FinalFantasy*--Juego
+Mapa--|>Strategy
+Inventario--|>Strategy
+Combate --|>Strategy
+Context o-- Strategy
+Juego *-- Nivel
+Nivel *-- Personaje
+EstadosJuego --* Context
+Juego*--Context
+@enduml
+'Relaciones----------------------------------------------------------'
